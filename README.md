@@ -6,7 +6,7 @@ The script will create security groups, set password policies, configure Group P
 
 Before running the script, ensure you have:
 
-    Windows Server 2019 or 2022
+    Windows Server 2016, 2019 or 2022
 
     Administrative privileges on the server
 
