@@ -11,8 +11,13 @@ $PasswordPolicySettings = @{
 }
 $GroupPolicyName = "SecurityConfigPolicy"
 
-# Import the Active Directory module
-Import-Module ActiveDirectory
+# Import the Active Directory module (if it's available)
+if (Get-Module -Name "ActiveDirectory" -ListAvailable) {
+    Import-Module ActiveDirectory
+} else {
+    Write-Host "The Active Directory module is not available. Make sure you have installed the RSAT tools."
+    Exit
+}
 
 # Function to create an AD security group
 function Create-ADSecurityGroup {
@@ -24,7 +29,7 @@ function Create-ADSecurityGroup {
     New-ADGroup -Name $GroupName -GroupScope Global -GroupCategory Security -Description $GroupDescription -Path $OUName
 }
 
-# Function to set password policy
+
 function Set-PasswordPolicy {
     param (
         [hashtable]$PolicySettings
