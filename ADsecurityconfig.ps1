@@ -11,7 +11,6 @@ $PasswordPolicySettings = @{
 }
 $GroupPolicyName = "SecurityConfigPolicy"
 
-# Import the Active Directory module (if it's available)
 if (Get-Module -Name "ActiveDirectory" -ListAvailable) {
     Import-Module ActiveDirectory
 } else {
@@ -19,7 +18,6 @@ if (Get-Module -Name "ActiveDirectory" -ListAvailable) {
     Exit
 }
 
-# Function to create an AD security group
 function Create-ADSecurityGroup {
     param (
         [string]$GroupName,
@@ -28,7 +26,6 @@ function Create-ADSecurityGroup {
 
     New-ADGroup -Name $GroupName -GroupScope Global -GroupCategory Security -Description $GroupDescription -Path $OUName
 }
-
 
 function Set-PasswordPolicy {
     param (
@@ -39,7 +36,6 @@ function Set-PasswordPolicy {
     Set-ADAccountLockoutPolicy -LockoutThreshold $PolicySettings["LockoutThreshold"] -LockoutDuration $PolicySettings["LockoutDuration"] -LockoutObservationWindow $PolicySettings["LockoutObservationWindow"]
 }
 
-# Function to create and link Group Policy
 function Create-GroupPolicy {
     param (
         [string]$PolicyName
@@ -50,18 +46,13 @@ function Create-GroupPolicy {
     New-GPLink -Name "Active Directory Security Configuration" -Target "ou=$OUName,$DomainName" -LinkEnabled Yes -GPO $GPO.Id
 }
 
-# Main script
 
-# Create a security group for administrators
 Create-ADSecurityGroup -GroupName $AdminGroupName -GroupDescription "Administrators Group"
 
-# Add users to the administrators group (replace with actual usernames)
 Add-ADGroupMember -Identity $AdminGroupName -Members "User1", "User2"
 
-# Set the password policy
 Set-PasswordPolicy -PolicySettings $PasswordPolicySettings
 
-# Create and link Group Policy
 Create-GroupPolicy -PolicyName $GroupPolicyName
 
 # Configure Group Policy settings (add more as needed)
@@ -81,10 +72,8 @@ ForEach ($Setting in $GPOSettings.GetEnumerator()) {
     Set-GPRegistryValue -Name $GroupPolicyName -Key "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" -ValueName $Setting.Key -Type String -Value $Setting.Value
 }
 
-# Configure Windows Firewall rules (add more as needed)
 New-NetFirewallRule -DisplayName "Allow RDP Inbound" -Enabled True -Action Allow -Protocol TCP -Direction Inbound -Profile Domain -Program "%SystemRoot%\system32\svchost.exe" -Service RemoteDesktop -LocalPort 3389
 
-# Refresh Group Policy
 gpupdate /force
 
 Write-Host "Active Directory security configuration complete."
