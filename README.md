@@ -1,50 +1,35 @@
 
-The script will create security groups, set password policies, configure Group Policy, and make other security-related changes to your Active Directory environment.
+# Overview
 
+- Creating a "Domain Administrators" security group
+    - Setting strong password policies
+    - Creating a GPO "Security Policy"
+      - Configuration of various security policies through GPO
+      - Creating a firewall rule to allow RDP
+     - Force policy update on all computers
 
-# Prerequisites
+# Prerequisites:
 
-Before running the script, ensure you have:
+- Windows PowerShell 5.1 or higher
+- Active Directory module installed
+- Administrative permissions in Active Directory
 
-    Windows Server 2016, 2019 or 2022
+# Instructions for use:
 
-    Administrative privileges on the server
+- Edit the script and configure the variables according to your environment:
+  
+            $domain: Domain name
+  
+            $adminGroupName: Name of the administrator group
+  
+            $ouName: Organizational unit where the group will be created
+  
+            $passwordPolicySettings: Password settings
+  
+            $gpoName: Name of the GPO
 
-PowerShell Execution Policy set to allow script execution. You can do this by running:
+- Run the script in PowerShell with administrative privileges.
 
-    Set-ExecutionPolicy RemoteSigned
+- Review the Active Directory event log to verify that the configuration was applied successfully.
 
-
-You can download the script directly from the GitHub repository:
-
-    Go to the GitHub repository.
-    Click on the "Code" button and select "Download ZIP."
-    Extract the contents to a directory of your choice.
-
-  # Running the Script
-
-Open PowerShell as an administrator.
-
-Navigate to the directory where you extracted the script And run it:
-
-    .\ADsecurityconfig.ps1
-
-The script will begin performing Active Directory security settings.
-
-
-
-# Customizing the Script
-
-Before running the script, It is important that you customize the script according to match your organization's specific requirements. 
-
-Open the script using a text editor and modify the following variables:
-
-    $DomainName: Set it to your Active Directory domain name.
-    $AdminGroupName: Change the name of the administrators' group as needed.
-    $OUName: Specify the organizational unit where you want to create security groups.
-    $PasswordPolicySettings: Customize the password policy settings according to your organization's policies.
-    $GroupPolicyName: Rename the Group Policy object to suit your preferences.
-
-After running the script, When starting the script, it is important to check that the settings were applied as defined, you can use ***administrative tools like Group Policy Management Console and Active Directory Users*** to confirm the changes.
-
-# Ps: Remember to test the script in an appropriate environment before running it directly in your production environment
+- ***It is recommended to test the script in a test environment before deploying it to production.***
